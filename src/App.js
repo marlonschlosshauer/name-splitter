@@ -4,21 +4,23 @@ import './App.css';
 const { row, column } = { row: { display: 'flex', flexDirection: 'row' }, column: { display: 'flex', flexDirection: 'column' } };
 
 const Term = ({ term, terms, index, options }) => {
-  return (
-    <div style={{ width: '512px' }}>
-      <h3>{term}</h3>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {
-          terms.filter((_, i) => i !== index)
-            .map(t => `${term} ${t}`)
-            .filter(s => s.length < options.maxLength)
-            .map(s => (options.allowUppercase) ? s : s.toLowerCase())
-            .filter(s => (!options.allowNumbers) ? !s.match(/[0-9]/) : true)
-            .map((t, i) => (<p key={i}>{t}</p>))
-        }
+  const ts = terms
+    .filter((_, i) => i !== index)
+    .map(t => `${term} ${t}`)
+    .filter(s => s.length < options.maxLength)
+    .map(s => (options.allowUppercase) ? s : s.toLowerCase())
+    .filter(s => (!options.allowNumbers) ? !s.match(/[0-9]/) : true);
 
+  return (
+    (ts && ts.length > 0)
+      ?
+      <div style={{ width: '128px' }}>
+        <h3>{term}</h3>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {ts.map((t, i) => (<p key={i}>{t}</p>))}
+        </div>
       </div>
-    </div>
+      : <div></div>
   )
 }
 
@@ -42,7 +44,12 @@ const App = () => {
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
-              setTerms(e.target.value.trim().split(/,/).map(s => s.trim()))
+              setTerms(e.target
+                .value
+                .trim()
+                .split(/,/)
+                .map(s => s.trim())
+                .filter(s => s !== ''))
             }} />
         </div>
 
