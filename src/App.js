@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
 
-function App() {
+const Term = ({ term, terms, index }) => {
+  return (
+    <div>
+      <h3>{term}</h3>
+      <p>{terms.map((t, i) => (i !== index) ? `${term} ${t}` : '')} </p>
+    </div>
+  )
+}
+
+const App = () => {
+  const [input, setInput] = useState('');
+  const [terms, setTerms] = useState([]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        name=""
+        type="text"
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          setTerms(e.target.value.split(/,/))
+        }} />
+      <div>
+        {
+          terms.map((term, index) => <Term key={index} term={term} terms={terms} index={index} />)
+        }
+      </div>
     </div>
   );
 }
